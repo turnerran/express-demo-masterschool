@@ -45,9 +45,11 @@ const courses = [
   },
 ];
 
-app.get("/", (req, res) => {
-  res.send("hello world!!!");
-});
+// 5) Last question
+// You have a helper module which contains the `generateRandomId` function. it returns an number between 1 - 10
+// You should create a middleware which calls that function on each request
+// in case that users array above doesn't contain this is, the function should return a 403 (not authorized) to the client
+// else, call next and proceed the request
 
 // /api/courses?name=cou
 app.get("/api/courses", (req, res) => {
@@ -97,8 +99,4 @@ function validateCourse(course) {
   };
 
   return Joi.validate(course, schema);
-}
-
-function isValid(id) {
-  return id % 2 !== 0;
 }
