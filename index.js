@@ -1,23 +1,26 @@
 const express = require("express");
 const Joi = require("joi");
 
-//const coursesRoute = require("./routes/courses");
-
 const app = express();
 
-// built in middlewares
-
-app.use(express.json()); // in case there is a body in the request it will populate req.body
-app.use(express.static("public")); // allows to serve static content (try localhost:3000/readme.txt)
-
-// custom middleware
-app.use(function (req, res, next) {
-  console.log("authenticating...");
-  //return res.status(401).send("not authenticated");
-  next();
-});
-
-//app.use("/api/courses", coursesRoute); // any route that start with /api/courses , let courses router handle
+const users = [
+  {
+    id: 1,
+    name: "John",
+  },
+  {
+    id: 3,
+    name: "Robert",
+  },
+  {
+    id: 5,
+    name: "Bob",
+  },
+  {
+    id: 7,
+    name: "Nick",
+  },
+];
 
 const courses = [
   {
@@ -68,15 +71,8 @@ app.post("/api/courses", (req, res) => {
   res.send(course);
 });
 
+// 1) implement a get method to retrieve a course by it's id
 //api/courses/5
-app.get("/api/courses/:id", (req, res) => {
-  const course = courses.find((course) => course.id === Number(req.params.id));
-  if (!course) {
-    res.status(404).send("No such course exists");
-  }
-
-  res.send(course);
-});
 
 app.delete("/api/courses/:id", (req, res) => {
   const course = courses.find((course) => course.id === Number(req.params.id));
@@ -90,20 +86,7 @@ app.delete("/api/courses/:id", (req, res) => {
   res.send(course);
 });
 
-app.put("/api/courses/:id", (req, res) => {
-  const course = courses.find((course) => course.id === Number(req.params.id));
-  if (!course) {
-    return res.status(404).send("No such course exists");
-  }
-
-  const { error } = validateCourse(req.body);
-  if (error) {
-    return res.status(400).send(error.details[0].message);
-  }
-
-  course.name = req.body.name;
-  res.send(course);
-});
+// 3) implement a put method to update a course name by it's id
 
 const port = process.env.PORT || 3000;
 app.listen(3000, () => console.log(`listening on port ${port} !!.....`));
@@ -114,4 +97,8 @@ function validateCourse(course) {
   };
 
   return Joi.validate(course, schema);
+}
+
+function isValid(id) {
+  return id % 2 !== 0;
 }
